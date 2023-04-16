@@ -1,4 +1,4 @@
-CREATE TABLE auto_posts(
+CREATE TABLE auto_posts (
     id SERIAL PRIMARY KEY,
 	description text,
 	created timestamp,
