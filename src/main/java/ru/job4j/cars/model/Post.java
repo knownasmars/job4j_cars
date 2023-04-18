@@ -39,4 +39,7 @@ public class Post {
     )
     private List<User> participates = new ArrayList<>();
 
+    @OneToOne
+    @JoinColumn(name = "car_id")
+    private Car car;
 }

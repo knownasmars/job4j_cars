@@ -1,0 +1,1 @@
+ALTER TABLE auto_posts ADD COLUMN car_id int not null references cars(id);
