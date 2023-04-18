@@ -14,16 +14,19 @@ public class OwnerRepository {
     private final CrudRepository repository;
 
     public Owner add(Owner owner) {
-        repository.run(session -> session.persist(owner));
+        repository.run(session -> session.save(owner));
         return owner;
     }
 
-    public void update(Owner owner) {
-        repository.run(session -> session.merge(owner));
+    public boolean update(Owner owner) {
+        return repository.booleanRun(session -> {
+            session.merge(owner);
+            return true;
+        });
     }
 
-    public void delete(int id) {
-        repository.run(
+    public boolean delete(int id) {
+        return repository.booleanRun(
                 "delete from Owner where id = :fId",
                 Map.of("fId", id)
         );

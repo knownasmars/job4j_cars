@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 @AllArgsConstructor
 public class UserRepository {
-    private final CrudRepository crudRepository;
+    private final CrudRepository repository;
 
     /**
      * Сохранить в базе.
@@ -19,7 +19,7 @@ public class UserRepository {
      * @return пользователь с id.
      */
     public User create(User user) {
-        crudRepository.run(session -> session.persist(user));
+        repository.run(session -> session.save(user));
         return user;
     }
 
@@ -27,16 +27,19 @@ public class UserRepository {
      * Обновить в базе пользователя.
      * @param user пользователь.
      */
-    public void update(User user) {
-        crudRepository.run(session -> session.merge(user));
+    public boolean update(User user) {
+        return repository.booleanRun(session -> {
+            session.merge(user);
+            return true;
+        });
     }
 
     /**
      * Удалить пользователя по id.
      * @param userId ID
      */
-    public void delete(int userId) {
-        crudRepository.run(
+    public boolean delete(int userId) {
+        return repository.booleanRun(
                 "delete from User where id = :fId",
                 Map.of("fId", userId)
         );
@@ -47,7 +50,7 @@ public class UserRepository {
      * @return список пользователей.
      */
     public List<User> findAllOrderById() {
-        return crudRepository.query("from User order by id asc", User.class);
+        return repository.query("from User order by id asc", User.class);
     }
 
     /**
@@ -55,7 +58,7 @@ public class UserRepository {
      * @return пользователь.
      */
     public Optional<User> findById(int userId) {
-        return crudRepository.optional(
+        return repository.optional(
                 "from User where id = :fId", User.class,
                 Map.of("fId", userId)
         );
@@ -67,7 +70,7 @@ public class UserRepository {
      * @return список пользователей.
      */
     public List<User> findByLikeLogin(String key) {
-        return crudRepository.query(
+        return repository.query(
                 "from User where login like :fKey", User.class,
                 Map.of("fKey", "%" + key + "%")
         );
@@ -79,7 +82,7 @@ public class UserRepository {
      * @return Optional or user.
      */
     public Optional<User> findByLogin(String login) {
-        return crudRepository.optional(
+        return repository.optional(
                 "from User where login = :fLogin", User.class,
                 Map.of("fLogin", login)
         );

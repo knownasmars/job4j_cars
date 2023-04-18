@@ -13,6 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "auto_posts")
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class Post {
